@@ -80,7 +80,7 @@
         <mxCell id="H1AuBjO5pCfdvJ7z72MC-31" value="Buscar Telefone&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
           <mxGeometry x="689.9999999999998" y="415" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="H1AuBjO5pCfdvJ7z72MC-32" value="Celular" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+        <mxCell id="H1AuBjO5pCfdvJ7z72MC-32" value="Buscar Celular" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
           <mxGeometry x="699.9999999999998" y="540" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="H1AuBjO5pCfdvJ7z72MC-33" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="H1AuBjO5pCfdvJ7z72MC-23" target="H1AuBjO5pCfdvJ7z72MC-32">
