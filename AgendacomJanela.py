@@ -20,7 +20,6 @@ def conectarBanco():
         messagebox.showerror("Erro de Conexão", f"Erro ao conectar ao banco de dados: {erro}")
         return None
 
-
 def menuIniciar():
     global iniciar
     iniciar = Tk()
@@ -101,10 +100,6 @@ def menuCadastrar():
     Button(janela_cadastrar, text="Cadastrar", font=("Arial", 12), command=verificaCadastro).grid(row=9, columnspan=3, pady=15)
     Button(janela_cadastrar, text="Voltar ao menu", font=("Arial", 12), command=janela_cadastrar.destroy).grid(row=10, column=2, pady=15)
     
-import mysql.connector
-from tkinter import *
-from tkinter import messagebox
-
 def menuAlterar():
     # Criação da janela principal para alterar contato
     janela_alterar = Toplevel()
@@ -197,7 +192,7 @@ def salvarAlteracoes(id_contato, nome, telefone, celular, conexao, janela):
         cursor.execute(sql, (nome, telefone, celular, id_contato))
         conexao.commit()
 
-        messagebox.showinfo("Sucesso", "Contato alterado com sucesso!")
+        messagebox.showinfo("Sucesso", f"Contato alterado com sucesso!")
     except mysql.connector.Error as erro:
         messagebox.showerror("Erro ao salvar alterações", f"Erro ao salvar alterações: {erro}")
     finally:
