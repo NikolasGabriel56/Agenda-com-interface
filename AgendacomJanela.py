@@ -1,8 +1,8 @@
 import os
 import platform
 import mysql.connector
-from tkinter import Tk, Button, Label, Frame, Toplevel, Entry, messagebox
-from PIL import Image, ImageTk
+from tkinter import *
+from tkinter import messagebox
 
 def conectarBanco():
     """Função para conectar ao banco de dados."""
@@ -25,6 +25,7 @@ def menuIniciar():
     iniciar = Tk()
     iniciar.title("Agenda")
     iniciar.geometry("600x400")
+    iniciar.iconbitmap(r"C:\\Python\\Estudo\\Agenda com interface grafica\\images\\newpy.ico")
     
     
     
@@ -55,6 +56,7 @@ def menuIniciar():
 def menuCadastrar():
     janela_cadastrar = Toplevel(iniciar)
     janela_cadastrar.title("Cadastrar contato")
+    janela_cadastrar.iconbitmap(r"C:\\Python\\Estudo\\Agenda com interface grafica\\images\\newpy.ico")
     
     Label(janela_cadastrar, text="Insira os dados do contato:", font=("Arial",16)).grid(row=1, columnspan=3, pady=5)
     Label(janela_cadastrar, text="Nome:", font=("Arial",14)).grid(row=2, columnspan=3, pady=5)
@@ -104,7 +106,8 @@ def menuAlterar():
     # Criação da janela principal para alterar contato
     janela_alterar = Toplevel()
     janela_alterar.title("Alterar contato")
-
+    janela_alterar.geometry("500x500")  # Ajuste de tamanho para garantir espaço
+    janela_alterar.iconbitmap(r"C:\\Python\\Estudo\\Agenda com interface grafica\\images\\newpy.ico")
 
     # Mensagem inicial
     Label(janela_alterar, text="Informe como irá achar o contato", font=("Arial", 16)).grid(row=0, column=0, columnspan=3, pady=10)
@@ -192,7 +195,7 @@ def salvarAlteracoes(id_contato, nome, telefone, celular, conexao, janela):
         cursor.execute(sql, (nome, telefone, celular, id_contato))
         conexao.commit()
 
-        messagebox.showinfo("Sucesso", f"Contato alterado com sucesso!")
+        messagebox.showinfo("Sucesso", "Contato alterado com sucesso!")
     except mysql.connector.Error as erro:
         messagebox.showerror("Erro ao salvar alterações", f"Erro ao salvar alterações: {erro}")
     finally:
