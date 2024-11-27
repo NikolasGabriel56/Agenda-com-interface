@@ -45,7 +45,7 @@ def menuIniciar():
     Button(frame, text="Cadastrar contato", font=("Arial", 12), width=20, command=menuCadastrar).grid(row=1, column=0, pady=10)
     Button(frame, text="Alterar contato", font=("Arial", 12), width=20, command=menuAlterar).grid(row=2, column=0, pady=10)
     Button(frame, text="Deletar contato", font=("Arial", 12), width=20, command=menuDeletar).grid(row=3, column=0, pady=10)
-    Button(frame, text="Listar contatos", font=("Arial", 12), width=20).grid(row=4, column=0, pady=10)
+    Button(frame, text="Listar contatos", font=("Arial", 12), width=20, command=menuListar).grid(row=4, column=0, pady=10)
     Button(frame, text="Exportar contatos", font=("Arial", 12), width=20).grid(row=5, column=0, pady=10)
     Button(frame, text="Sair", font=("Arial", 12), width=20, command=iniciar.destroy).grid(row=6, column=0, pady=10)
     
@@ -340,4 +340,156 @@ def deletarContato(janela, tipo_busca, valor_busca):
         cursor.close()
         conexao.close()
 
+
+    """Função para exibir a janela de listagem dos contatos."""
+    # Criar a janela de listagem
+    janela_listar = Tk()
+    janela_listar.title("Lista de contatos")
+    
+    # Conectar ao banco de dados
+    conexao = conectarBanco()
+    if conexao is None:
+        return
+
+    # Executar a consulta SQL
+    comando = "SELECT id, nome, telefone, celular FROM contatos ORDER BY id ASC"
+    cursor = conexao.cursor()
+    try:
+        cursor.execute(comando)
+        contatos = cursor.fetchall()
+    except mysql.connector.Error as erro:
+        messagebox.showerror("Erro de Consulta", f"Erro ao buscar dados: {erro}")
+        return
+    finally:
+        cursor.close()
+        conexao.close()
+
+    # Variáveis para controlar a navegação
+    current_index = [0]
+
+    # Função para atualizar os campos com os dados do contato atual
+    def atualizar_campos(index):
+        if 0 <= index < len(contatos):
+            id, nome, telefone, celular = contatos[index]
+            label_nome_valor.config(text=nome)
+            label_telefone_valor.config(text=telefone)
+            label_celular_valor.config(text=celular)
+
+    # Função para ir para o próximo contato
+    def proximo_contato():
+        if current_index[0] < len(contatos) - 1:
+            current_index[0] += 1
+            atualizar_campos(current_index[0])
+
+    # Função para ir para o contato anterior
+    def contato_anterior():
+        if current_index[0] > 0:
+            current_index[0] -= 1
+            atualizar_campos(current_index[0])
+
+    # Labels para os dados dos contatos
+    Label(janela_listar, text="ID:").grid(row=0, column=0, padx=10, pady=5, sticky=W)
+    label_id_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_id_valor.grid(row=0, column=1, padx=10, pady=5)
+
+    Label(janela_listar, text="Nome:").grid(row=1, column=0, padx=10, pady=5, sticky=W)
+    label_nome_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_nome_valor.grid(row=1, column=1, padx=10, pady=5)
+
+    Label(janela_listar, text="Telefone:").grid(row=2, column=0, padx=10, pady=5, sticky=W)
+    label_telefone_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_telefone_valor.grid(row=2, column=1, padx=10, pady=5)
+
+    Label(janela_listar, text="Celular:").grid(row=3, column=0, padx=10, pady=5, sticky=W)
+    label_celular_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_celular_valor.grid(row=3, column=1, padx=10, pady=5)
+
+    # Botões de navegação
+    Button(janela_listar, text="Anterior", command=contato_anterior).grid(row=3, column=0, padx=10, pady=10, sticky=E)
+    Button(janela_listar, text="Próximo", command=proximo_contato).grid(row=3, column=1, padx=10, pady=10, sticky=W)
+
+    # Inicializar os campos com o primeiro contato, se houver
+    if contatos:
+        atualizar_campos(current_index[0])
+
+    # Iniciar o loop da interface gráfica
+    janela_listar.mainloop()
+   
+def menuListar():
+    janela_listar = Tk()
+    janela_listar.title("Lista de contatos")
+    janela_listar.iconbitmap(r"C:\\Python\\Estudo\\Agenda com interface grafica\\images\\newpy.ico")
+    
+    # Conectar ao banco de dados
+    conexao = conectarBanco()
+    if conexao is None:
+        return
+
+    # Executar a consulta SQL
+    comando = "SELECT id, nome, telefone, celular FROM contatos ORDER BY id ASC"
+    cursor = conexao.cursor()
+    try:
+        cursor.execute(comando)
+        contatos = cursor.fetchall()
+    except mysql.connector.Error as erro:
+        messagebox.showerror("Erro de Consulta", f"Erro ao buscar dados: {erro}")
+        return
+    finally:
+        cursor.close()
+        conexao.close()
+
+    # Variáveis para controlar a navegação
+    current_index = [0]
+
+    # Função para atualizar os campos com os dados do contato atual
+    def atualizar_campos(index):
+        if 0 <= index < len(contatos):
+            id, nome, telefone, celular = contatos[index]
+            label_id_valor.config(text=id)
+            label_nome_valor.config(text=nome)
+            label_telefone_valor.config(text=telefone)
+            label_celular_valor.config(text=celular)
+
+    # Função para ir para o próximo contato
+    def proximo_contato():
+        if current_index[0] < len(contatos) - 1:
+            current_index[0] += 1
+            atualizar_campos(current_index[0])
+
+    # Função para ir para o contato anterior
+    def contato_anterior():
+        if current_index[0] > 0:
+            current_index[0] -= 1
+            atualizar_campos(current_index[0])
+
+    # Labels para os dados dos contatos
+    Label(janela_listar, text="ID:").grid(row=0, column=0, padx=10, pady=5, sticky=W)
+    label_id_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_id_valor.grid(row=0, column=1, padx=10, pady=5)
+
+    Label(janela_listar, text="Nome:").grid(row=1, column=0, padx=10, pady=5, sticky=W)
+    label_nome_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_nome_valor.grid(row=1, column=1, padx=10, pady=5)
+
+    Label(janela_listar, text="Telefone:").grid(row=2, column=0, padx=10, pady=5, sticky=W)
+    label_telefone_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_telefone_valor.grid(row=2, column=1, padx=10, pady=5)
+
+    Label(janela_listar, text="Celular:").grid(row=3, column=0, padx=10, pady=5, sticky=W)
+    label_celular_valor = Label(janela_listar, width=30, anchor='w', relief="sunken")
+    label_celular_valor.grid(row=3, column=1, padx=10, pady=5)
+
+    # Botões de navegação
+    Button(janela_listar, text="Anterior", command=contato_anterior).grid(row=4, column=0, padx=10, pady=10, sticky=E)
+    Button(janela_listar, text="Próximo", command=proximo_contato).grid(row=4, column=1, padx=10, pady=10, sticky=W)
+
+    # Inicializar os campos com o primeiro contato, se houver
+    if contatos:
+        atualizar_campos(current_index[0])
+
+    # Iniciar o loop da interface gráfica
+    janela_listar.mainloop()
+    
+    
+    
 menuIniciar()
