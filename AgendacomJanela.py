@@ -46,7 +46,7 @@ def menuIniciar():
     Button(frame, text="Alterar contato", font=("Arial", 12), width=20, command=menuAlterar).grid(row=2, column=0, pady=10)
     Button(frame, text="Deletar contato", font=("Arial", 12), width=20, command=menuDeletar).grid(row=3, column=0, pady=10)
     Button(frame, text="Listar contatos", font=("Arial", 12), width=20, command=menuListar).grid(row=4, column=0, pady=10)
-    Button(frame, text="Exportar contatos", font=("Arial", 12), width=20).grid(row=5, column=0, pady=10)
+    Button(frame, text="Exportar contatos", font=("Arial", 12), width=20, command=Exportar).grid(row=5, column=0, pady=10)
     Button(frame, text="Sair", font=("Arial", 12), width=20, command=iniciar.destroy).grid(row=6, column=0, pady=10)
     
     
@@ -490,6 +490,72 @@ def menuListar():
     # Iniciar o loop da interface gráfica
     janela_listar.mainloop()
     
+def exportarContatos(nome_arquivo):
+    """Função para exportar os contatos para um arquivo."""
+    try:
+        # Conectar ao banco de dados
+        conexao = conectarBanco()
+        if conexao is None:
+            raise Exception("Erro ao conectar ao banco de dados.")
+
+        comando = "SELECT id, nome, telefone, celular FROM contatos ORDER BY id ASC"
+        contatos = []
+
+        # Executar a consulta
+        cursor = conexao.cursor()
+        cursor.execute(comando)
+
+        # Armazenar os resultados na lista de contatos
+        for id, nome, telefone, celular in cursor:
+            contatos.append({'id': id, 'nome': nome, 'telefone': telefone, 'celular': celular})
+
+        # Fechar o cursor e a conexão
+        cursor.close()
+        conexao.close()
+
+        # Gravar os resultados em um arquivo
+        with open(nome_arquivo, "w", encoding="utf-8") as arquivo:
+            for i, contato in enumerate(contatos, start=1):
+                registro = (
+                    f"Contato {i}\n"
+                    f"Nome: {contato['nome']}\n"
+                    f"Telefone: {contato['telefone']}\n"
+                    f"Celular: {contato['celular']}\n"
+                    f"{'-'*30}\n"  # Separador visual entre contatos
+                )
+                arquivo.write(registro)
+
+        # Mostrar mensagem de sucesso
+        messagebox.showinfo("Sucesso", "Exportação realizada com sucesso")
+
+    except Exception as err:
+        messagebox.showerror("Erro", f'Impossível exportar: {err}')
+
+def Exportar():
+    """Função para abrir a janela onde o usuário informará o nome do arquivo."""
+    janela_exportar = Tk()
+    janela_exportar.title("Exportar Contatos")
+    janela_exportar.iconbitmap(r"C:\\Python\\Estudo\\Agenda com interface grafica\\images\\newpy.ico")
     
+
+    # Label e Entry para nome do arquivo
+    Label(janela_exportar, text="Nome do Arquivo:").grid(row=0, column=0, padx=10, pady=10)
+    entry_nome_arquivo = Entry(janela_exportar, width=30)
+    entry_nome_arquivo.grid(row=0, column=1, padx=10, pady=10)
+
+    # Função para capturar o nome do arquivo e chamar a função de exportação
+    def executar_exportacao():
+        nome_arquivo = entry_nome_arquivo.get()
+        if nome_arquivo.strip() == "":
+            messagebox.showerror("Erro", "Por favor, informe um nome de arquivo válido.")
+        else:
+            if not nome_arquivo.endswith(".txt"):
+                nome_arquivo += ".txt"  # Adiciona a extensão se não estiver presente
+            exportarContatos(nome_arquivo)
+            janela_exportar.destroy()  # Fecha a janela após a exportação
+
+    # Botão para exportar
+    Button(janela_exportar, text="Exportar", command=executar_exportacao).grid(row=1, column=1, padx=10, pady=10)
+
     
 menuIniciar()
